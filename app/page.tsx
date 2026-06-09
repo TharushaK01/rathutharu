@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import localFont from 'next/font/local';
 
+
 // Configure the custom legacy Sinhala font
 const ccOldPress = localFont({
   src: '../public/fonts/cc_oldpress.ttf',

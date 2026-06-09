@@ -274,7 +274,7 @@ const handleStepAdvance = (direction: 'next' | 'prev') => {
           
           {/* Action Trigger Button right at the end of the text stack */}
           <Link
-            href="https://drive.google.com/drive/folders/YOUR_GOOGLE_DRIVE_FOLDER_ID_HERE"
+            href="https://drive.google.com/drive/folders/1hdCbQYMRJOi-U37jnaiL1iCx3G98Dj1X?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
             className="font-sans px-10 py-4 bg-[#7A6229] text-[#F0EFE0] rounded-full text-base font-semibold tracking-wider shadow-md hover:bg-[#634f20] hover:scale-105 active:scale-98 transition-all duration-300 flex items-center gap-3 drop-shadow-sm group pointer-events-auto cursor-pointer"

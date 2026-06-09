@@ -224,7 +224,7 @@ const handleStepAdvance = (direction: 'next' | 'prev') => {
             <p
               key={index}
               className={`absolute z-30 font-[family-name:var(--font-cc-oldpress)] leading-relaxed drop-shadow-[0_4px_12px_rgba(240,239,224,1)] transition-all duration-700 ease-in-out select-none ${alignmentClasses} ${
-                isCenteredSlide ? 'text-3xl md:text-5xl' : 'text-2xl md:text-4xl'
+                isCenteredSlide ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'
               } ${
                 isTextVisible 
                   ? 'opacity-100 filter blur-0 pointer-events-auto translate-y-0' 

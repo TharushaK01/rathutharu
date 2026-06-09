@@ -223,9 +223,9 @@ const handleStepAdvance = (direction: 'next' | 'prev') => {
     const isCenteredSlide = index === 4 || index === 5;
 
     const alignmentClasses = index === 5
-      ? 'top-[15%] left-1/2 -translate-x-1/2 text-center max-w-4xl w-full px-6'
+      ? 'top-[15%] left-1/2 -translate-x-1/2 text-center max-w-4xl w-full px-6 text-xl md:text-2xl'
       : index === 4
-        ? 'top-[15%] left-1/2 -translate-x-1/2 text-center max-w-4xl w-full px-6'
+        ? 'top-[15%] left-1/2 -translate-x-1/2 text-center max-w-4xl w-full px-6 text-xl md:text-2xl'
         : slide.position === 'right'
           ? 'bottom-24 right-6 md:right-16 text-right max-w-xl'
           : 'bottom-24 left-6 md:left-16 text-left max-w-xl';

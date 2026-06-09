@@ -23,20 +23,30 @@ export default function Home() {
   const isAnimating = useRef(false);
   const totalSteps = 1 + (slidesData.length * 2); // 1 (Hero) + 8 interactive sub-timeline steps = 9
 
-  const handleStepAdvance = (direction: 'next' | 'prev') => {
-    if (isAnimating.current) return;
-    isAnimating.current = true;
+ const handleStepAdvance = (direction: 'next' | 'prev') => {
+  if (isAnimating.current) return;
+  isAnimating.current = true;
 
-    if (direction === 'next' && currentStep < totalSteps - 1) {
+  if (direction === 'next') {
+    if (currentStep < totalSteps - 1) {
       setCurrentStep((prev) => prev + 1);
-    } else if (direction === 'prev' && currentStep > 0) {
-      setCurrentStep((prev) => prev - 1);
+    } else {
+      // CIRCLE LOOP: Reset smoothly back to the Hero Home section when stepping past the last slide
+      setCurrentStep(0);
     }
+  } else if (direction === 'prev') {
+    if (currentStep > 0) {
+      setCurrentStep((prev) => prev - 1);
+    } else {
+      // Go back to the end of the presentation if scrolling up from the top home screen
+      setCurrentStep(totalSteps - 1);
+    }
+  }
 
-    setTimeout(() => {
-      isAnimating.current = false;
-    }, 1400); // Gives plenty of room for the 1.4s ink expansion timeline to resolve beautifully
-  };
+  setTimeout(() => {
+    isAnimating.current = false;
+  }, 1400);
+};
 
   // Wheel tracking
   useEffect(() => {
@@ -113,30 +123,34 @@ export default function Home() {
         )}
       </div>
 
-      {/* 2. ADVANCED WATERCOLOR MASK REVEAL LAYER */}
-      <div className="absolute inset-0 w-full h-full z-10 pointer-events-none flex items-center justify-center">
-        {slidesData.map((slide, index) => {
-          const targetImageStep = 1 + (index * 2);
-          const isRevealed = currentStep >= targetImageStep;
+{/* 2. ADVANCED WATERCOLOR MASK REVEAL LAYER */}
+<div className="absolute inset-0 w-full h-full z-10 pointer-events-none flex items-center justify-center">
+  {slidesData.map((slide, index) => {
+    const targetImageStep = 1 + (index * 2);
+    
+    // UPDATED: The image is visible during its entry step AND stays visible 
+    // while its matching text is being displayed on the next step.
+    // It disappears the millisecond the user advances to the next image slide step!
+    const isRevealed = currentStep === targetImageStep || currentStep === targetImageStep + 1;
 
-          return (
-            <div
-              key={index}
-              className="absolute w-[90%] md:w-[75%] h-[70%] bg-cover bg-center transition-all duration-[1400ms] ease-out"
-              style={{
-                backgroundImage: `url('${slide.img}')`,
-                // We use a high-contrast ink-splat SVG or PNG silhouette file as a dynamic clip mask
-                WebkitMaskImage: "url('/ink-splat-mask.png')",
-                WebkitMaskSize: isRevealed ? '220% 220%' : '0% 0%',
-                WebkitMaskPosition: 'center center',
-                WebkitMaskRepeat: 'no-repeat',
-                opacity: isRevealed ? 1 : 0,
-                transform: isRevealed ? 'scale(1)' : 'scale(0.85)',
-              }}
-            />
-          );
-        })}
-      </div>
+    return (
+      <div
+        key={index}
+        className="absolute w-[90%] md:w-[75%] h-[70%] bg-cover bg-center transition-all duration-[1400ms] ease-out"
+        style={{
+          backgroundImage: `url('${slide.img}')`,
+          WebkitMaskImage: "url('/ink-splat-mask.png')",
+          WebkitMaskSize: isRevealed ? '220% 220%' : '0% 0%',
+          WebkitMaskPosition: 'center center',
+          WebkitMaskRepeat: 'no-repeat',
+          opacity: isRevealed ? 1 : 0,
+          // Shrinks back down elegantly when exiting to match a fluid slideshow circle
+          transform: isRevealed ? 'scale(1) rotate(0deg)' : 'scale(0.85) rotate(2deg)',
+        }}
+      />
+    );
+  })}
+</div>
 
       {/* 3. TEXT & UI OVERLAYS */}
 {/* CORNER FLUID FLOATING TEXTS (No Box Backgrounds, Alternates Bottom Left & Right Corners) */}

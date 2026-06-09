@@ -47,6 +47,13 @@ body {
     transform: translateY(0);
   }
 }
+.hero-animate-heading {
+  animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.hero-animate-sub {
+  animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards !important;
+}
 
 /* Add this utility block directly to force it via regular CSS class hooks */
 .animate-fade-in-up {

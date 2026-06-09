@@ -84,6 +84,34 @@ export default function Home() {
           }}
         />
       </div>
+      {/* 3. CORE INTERACTIVE LAYER INTERFACE */}
+      <div className="relative z-20 w-full h-full flex flex-col items-center justify-center text-center px-4">
+        
+        {/* HERO CONTENT: Displays only when step is 0 */}
+        <div className={`transition-all duration-1000 transform ${currentStep === 0 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-20 scale-95 pointer-events-none'}`}>
+          <h1 className="font-[family-name:var(--font-cc-oldpress)] text-6xl md:text-8xl mb-4 drop-shadow-sm animate-fade-in-up">
+            r;= mdg ;re
+          </h1>
+          <p className="font-[family-name:var(--font-cc-oldpress)] text-2xl md:text-4xl max-w-2xl leading-relaxed opacity-90 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+            l;djg Thd,j wdorfhka msළි.kakjd''æ
+          </p>
+        </div>
+
+
+
+        {/* HERO SCROLL DOWN TRIGGER */}
+        {currentStep === 0 && (
+          <div 
+            onClick={() => handleStepAdvance('next')}
+            className="absolute bottom-28 flex flex-col items-center gap-1 animate-bounce cursor-pointer active:scale-95 transition-transform"
+          >
+            <span className="text-xs tracking-wider opacity-80 font-medium">පහලට යන්න</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+            </svg>
+          </div>
+        )}
+      </div>
 
       {/* 2. ADVANCED WATERCOLOR MASK REVEAL LAYER */}
       <div className="absolute inset-0 w-full h-full z-10 pointer-events-none flex items-center justify-center">

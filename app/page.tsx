@@ -12,7 +12,15 @@ const ccOldPress = localFont({
 
 // Slides data configuration (Contains only your 6 real image slides)
 const slidesData = [
-  { img: '/slide1.png', text: '<ud idßhla" irula lñihla weo.;a; fmdä hd¨fjda fokafkla \n\mgka .;a;  álla È. l;djla \n\rr;=mdg ;re l;djla', position: 'right' },
+{ 
+    img: '/slide1.png', 
+    text: [
+      '<ud idßhla" irula lñihla weo.;a; fmdä hd¨fjda fokafkl ',
+      'mgka .;a; álla È. l;djla ',
+      'r;=mdg ;re l;djla' // This is the line we will make bold!
+    ], 
+    position: 'right' 
+  },
   { img: '/slide2.png', text: 'wmsg wms ke;=ju neß fydou hd¨fjda fj,d Ôúf;a fnod.;a; l;djla', position: 'left' },
   { img: '/slide3.png', text: 'r;a;rka mdg rcrg wyihs\n\ iS;,u iS;, inr.uq wyih\n\ wjqreÿ .dkla fydfrka wyf.k ysáh l;djla', position: 'right' },
   { img: '/slide4.png', text: 'lÿ¨ ysrlrka\n\ ySk fmdÈ neoka\n\ myq lrmq wjqreÿ .dklg miafia wms wfma fjk l;djla', position: 'left' },
@@ -200,44 +208,57 @@ const handleStepAdvance = (direction: 'next' | 'prev') => {
         })}
       </div>
 
-      {/* 4. TEXT CORNER OVERLAYS */}
-      <div className="absolute inset-0 pointer-events-none w-full h-full z-30">
-        {slidesData.map((slide, index) => {
-          let targetTextStep = 2 + (index * 2);
-          
-          if (index === 4) {
-            targetTextStep = 12; // Slide 5 Text
-          } else if (index === 5) {
-            targetTextStep = 14; // Slide 6 Text
-          }
+{/* 4. TEXT CORNER OVERLAYS */}
+<div className="absolute inset-0 pointer-events-none w-full h-full z-30">
+  {slidesData.map((slide, index) => {
+    let targetTextStep = 2 + (index * 2);
+    
+    if (index === 4) {
+      targetTextStep = 12; // Slide 5 Text
+    } else if (index === 5) {
+      targetTextStep = 14; // Slide 6 Text
+    }
 
-          const isTextVisible = currentStep === targetTextStep; 
-          const isCenteredSlide = index === 4 || index === 5;
+    const isTextVisible = currentStep === targetTextStep; 
+    const isCenteredSlide = index === 4 || index === 5;
 
-const alignmentClasses = index === 5
-  ? 'top-[15%] left-1/2 -translate-x-1/2 text-center max-w-4xl w-full px-6' // Slide 6: Shifted down
-  : index === 4
-    ? 'top-[15%] left-1/2 -translate-x-1/2 text-center max-w-4xl w-full px-6'   // Slide 5: Stays at top
-    : slide.position === 'right'
-      ? 'bottom-24 right-6 md:right-16 text-right max-w-xl'
-      : 'bottom-24 left-6 md:left-16 text-left max-w-xl';
+    const alignmentClasses = index === 5
+      ? 'top-[26%] left-1/2 -translate-x-1/2 text-center max-w-4xl w-full px-6'
+      : index === 4
+        ? 'top-14 left-1/2 -translate-x-1/2 text-center max-w-4xl w-full px-6'
+        : slide.position === 'right'
+          ? 'bottom-24 right-6 md:right-16 text-right max-w-xl'
+          : 'bottom-24 left-6 md:left-16 text-left max-w-xl';
 
-          return (
-            <p
-              key={index}
-              className={`absolute z-30 font-[family-name:var(--font-cc-oldpress)] leading-relaxed drop-shadow-[0_4px_12px_rgba(240,239,224,1)] transition-all duration-700 ease-in-out select-none ${alignmentClasses} ${
-                isCenteredSlide ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'
-              } ${
-                isTextVisible 
-                  ? 'opacity-100 filter blur-0 pointer-events-auto translate-y-0' 
-                  : 'opacity-0 filter blur-sm pointer-events-none -translate-y-4'
-              }`}
+    return (
+      <div
+        key={index}
+        className={`absolute z-30 font-[family-name:var(--font-cc-oldpress)] leading-relaxed drop-shadow-[0_4px_12px_rgba(240,239,224,1)] transition-all duration-700 ease-in-out select-none ${alignmentClasses} ${
+          isCenteredSlide ? 'text-3xl md:text-5xl' : 'text-xl md:text-2xl'
+        } ${
+          isTextVisible 
+            ? 'opacity-100 filter blur-0 pointer-events-auto translate-y-0' 
+            : 'opacity-0 filter blur-sm pointer-events-none -translate-y-4'
+        } whitespace-pre-line`}
+      >
+        {/* 🌟 NEW RENDER CHECK: Handles both array lists and standard line strings seamlessly */}
+        {Array.isArray(slide.text) ? (
+          slide.text.map((line, lineIndex) => (
+            <span 
+              key={lineIndex} 
+              // If it's the 3rd line (index 2), make it bold! Otherwise keep it normal weight.
+              className={`block ${lineIndex === 2 ? 'font-bold tracking-wide mt-2' : 'font-normal opacity-90'}`}
             >
-              {slide.text}
-            </p>
-          );
-        })}
+              {line}
+            </span>
+          ))
+        ) : (
+          <span>{slide.text}</span>
+        )}
       </div>
+    );
+  })}
+</div>
 
       {/* 5. INDEPENDENT FINALE CTA SCREEN (Step 15: No background image, perfectly centered layout) */}
       <div className={`absolute inset-0 z-40 w-full h-full flex flex-col items-center justify-center text-center px-6 pointer-events-none transition-all duration-1000 ease-in-out ${

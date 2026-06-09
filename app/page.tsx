@@ -24,7 +24,7 @@ const slidesData = [
   { img: '/slide2.png', text: 'wmsg wms ke;=ju neß fydou hd¨fjda fj,d Ôúf;a fnod.;a; l;djla', position: 'left' },
   { img: '/slide3.png', text: 'r;a;rka mdg rcrg wyihs\n\ iS;,u iS;, inr.uq wyih\n\ wjqreÿ .dkla fydfrka wyf.k ysáh l;djla', position: 'right' },
   { img: '/slide4.png', text: 'lÿ¨ ysrlrka\n\ ySk fmdÈ neoka\n\ myq lrmq wjqreÿ .dklg miafia wms wfma fjk l;djla', position: 'left' },
-  { img: '/slide5.png', text: 'le.,a, uy j,õg Th;a tkak', position: 'right' },
+  { img: '/slide5.png', text: 'lE.,a, uy j,õjg Th;a tkak', position: 'right' },
   { img: '/slide6.png', text: 'wdofrka u.=,a f.or tk Thd,d \n\ mq¨jkakï fï úÈhg weoka tkak', position: 'center' }
 ];
 

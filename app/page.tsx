@@ -21,32 +21,34 @@ const slidesData = [
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(0);
   const isAnimating = useRef(false);
-  const totalSteps = 1 + (slidesData.length * 2); // 1 (Hero) + 8 interactive sub-timeline steps = 9
+  
+  // Total Steps: 1 (Hero) + 8 (Slideshow states) + 1 (Final Date Text) = 10 total steps (Indices 0 to 9)
+  const totalSteps = 1 + (slidesData.length * 2) + 1;
 
- const handleStepAdvance = (direction: 'next' | 'prev') => {
-  if (isAnimating.current) return;
-  isAnimating.current = true;
+  const handleStepAdvance = (direction: 'next' | 'prev') => {
+    if (isAnimating.current) return;
+    isAnimating.current = true;
 
-  if (direction === 'next') {
-    if (currentStep < totalSteps - 1) {
-      setCurrentStep((prev) => prev + 1);
-    } else {
-      // CIRCLE LOOP: Reset smoothly back to the Hero Home section when stepping past the last slide
-      setCurrentStep(0);
+    if (direction === 'next') {
+      if (currentStep < totalSteps - 1) {
+        setCurrentStep((prev) => prev + 1);
+      } else {
+        // CIRCLE LOOP: Smoothly resets to Hero Home screen
+        setCurrentStep(0);
+      }
+    } else if (direction === 'prev') {
+      if (currentStep > 0) {
+        setCurrentStep((prev) => prev - 1);
+      } else {
+        // Go back to the Final Date step if scrolling up from Home screen
+        setCurrentStep(totalSteps - 1);
+      }
     }
-  } else if (direction === 'prev') {
-    if (currentStep > 0) {
-      setCurrentStep((prev) => prev - 1);
-    } else {
-      // Go back to the end of the presentation if scrolling up from the top home screen
-      setCurrentStep(totalSteps - 1);
-    }
-  }
 
-  setTimeout(() => {
-    isAnimating.current = false;
-  }, 1400);
-};
+    setTimeout(() => {
+      isAnimating.current = false;
+    }, 1400); // Wait time matches the watercolor mask ink bleed timing
+  };
 
   // Wheel tracking
   useEffect(() => {
@@ -94,7 +96,8 @@ export default function Home() {
           }}
         />
       </div>
-      {/* 3. CORE INTERACTIVE LAYER INTERFACE */}
+
+      {/* 2. CORE INTERACTIVE LAYER INTERFACE (HERO & FINAL DATE TEXT) */}
       <div className="relative z-20 w-full h-full flex flex-col items-center justify-center text-center px-4">
         
         {/* HERO CONTENT: Displays only when step is 0 */}
@@ -107,13 +110,29 @@ export default function Home() {
           </p>
         </div>
 
-
+        {/* FINAL EVENT TIMELINE DATE SECTION: Displays dynamically on step 9 */}
+        <div className={`absolute inset-0 z-30 w-full h-full flex flex-col items-center justify-center text-center px-4 pointer-events-none transition-all duration-1000 ${currentStep === 9 ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
+          <div className="flex flex-col items-center justify-center gap-4 text-[#7A6229]">
+            <h2 className="font-[family-name:var(--font-cc-oldpress)] text-5xl md:text-7xl drop-shadow-sm animate-fade-in-up">
+              fmdfidka udfia
+            </h2>
+            <p className="font-[family-name:var(--font-cc-oldpress)] text-4xl md:text-6xl drop-shadow-sm animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              24 fjks
+            </p>
+            <p className="font-[family-name:var(--font-cc-oldpress)] text-2xl md:text-4xl drop-shadow-sm animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+              nqood Wfoa
+            </p>
+            <p className="font-[family-name:var(--font-cc-oldpress)] text-6xl md:text-8xl font-bold tracking-wide drop-shadow-sm animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+              10'40g
+            </p>
+          </div>
+        </div>
 
         {/* HERO SCROLL DOWN TRIGGER */}
         {currentStep === 0 && (
           <div 
             onClick={() => handleStepAdvance('next')}
-            className="absolute bottom-28 flex flex-col items-center gap-1 animate-bounce cursor-pointer active:scale-95 transition-transform"
+            className="absolute bottom-28 flex flex-col items-center gap-1 animate-bounce cursor-pointer active:scale-95 transition-transform z-40 pointer-events-auto"
           >
             <span className="text-xs tracking-wider opacity-80 font-medium">පහලට යන්න</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
@@ -123,63 +142,56 @@ export default function Home() {
         )}
       </div>
 
-{/* 2. ADVANCED WATERCOLOR MASK REVEAL LAYER */}
-<div className="absolute inset-0 w-full h-full z-10 pointer-events-none flex items-center justify-center">
-  {slidesData.map((slide, index) => {
-    const targetImageStep = 1 + (index * 2);
-    
-    // UPDATED: The image is visible during its entry step AND stays visible 
-    // while its matching text is being displayed on the next step.
-    // It disappears the millisecond the user advances to the next image slide step!
-    const isRevealed = currentStep === targetImageStep || currentStep === targetImageStep + 1;
+      {/* 3. ADVANCED WATERCOLOR MASK REVEAL LAYER */}
+      <div className="absolute inset-0 w-full h-full z-10 pointer-events-none flex items-center justify-center">
+        {slidesData.map((slide, index) => {
+          const targetImageStep = 1 + (index * 2);
+          const isRevealed = currentStep === targetImageStep || currentStep === targetImageStep + 1;
 
-    return (
-      <div
-        key={index}
-        className="absolute w-[90%] md:w-[75%] h-[70%] bg-cover bg-center transition-all duration-[1400ms] ease-out"
-        style={{
-          backgroundImage: `url('${slide.img}')`,
-          WebkitMaskImage: "url('/ink-splat-mask.png')",
-          WebkitMaskSize: isRevealed ? '220% 220%' : '0% 0%',
-          WebkitMaskPosition: 'center center',
-          WebkitMaskRepeat: 'no-repeat',
-          opacity: isRevealed ? 1 : 0,
-          // Shrinks back down elegantly when exiting to match a fluid slideshow circle
-          transform: isRevealed ? 'scale(1) rotate(0deg)' : 'scale(0.85) rotate(2deg)',
-        }}
-      />
-    );
-  })}
-</div>
+          return (
+            <div
+              key={index}
+              className="absolute w-[90%] md:w-[75%] h-[70%] bg-cover bg-center transition-all duration-[1400ms] ease-out"
+              style={{
+                backgroundImage: `url('${slide.img}')`,
+                WebkitMaskImage: "url('/ink-splat-mask.png')",
+                WebkitMaskSize: isRevealed ? '220% 220%' : '0% 0%',
+                WebkitMaskPosition: 'center center',
+                WebkitMaskRepeat: 'no-repeat',
+                opacity: isRevealed ? 1 : 0,
+                transform: isRevealed ? 'scale(1) rotate(0deg)' : 'scale(0.85) rotate(2deg)',
+              }}
+            />
+          );
+        })}
+      </div>
 
-      {/* 3. TEXT & UI OVERLAYS */}
-{/* CORNER FLUID FLOATING TEXTS (No Box Backgrounds, Alternates Bottom Left & Right Corners) */}
-<div className="absolute inset-0 pointer-events-none w-full h-full z-30"> {/* Added z-30 here */}
-  {slidesData.map((slide, index) => {
-    const targetTextStep = 2 + (index * 2);
-    const isTextVisible = currentStep === targetTextStep; 
-    
-    // Build absolute layout hooks depending on data position property
-    const cornerClasses = slide.position === 'right'
-      ? 'bottom-24 right-6 md:right-16 text-right'
-      : 'bottom-24 left-6 md:left-16 text-left';
+      {/* 4. TEXT CORNER OVERLAYS */}
+      <div className="absolute inset-0 pointer-events-none w-full h-full z-30">
+        {slidesData.map((slide, index) => {
+          const targetTextStep = 2 + (index * 2);
+          const isTextVisible = currentStep === targetTextStep; 
+          
+          const cornerClasses = slide.position === 'right'
+            ? 'bottom-24 right-6 md:right-16 text-right'
+            : 'bottom-24 left-6 md:left-16 text-left';
 
-    return (
-      <p
-        key={index}
-        // ADDED: z-30 directly into the class list below to force it in front of the z-10 images
-        className={`absolute z-30 font-[family-name:var(--font-cc-oldpress)] text-2xl md:text-4xl max-w-xl leading-relaxed drop-shadow-[0_4px_12px_rgba(240,239,224,1)] transition-all duration-700 ease-in-out select-none ${cornerClasses} ${
-          isTextVisible 
-            ? 'opacity-100 translate-y-0 filter blur-0 pointer-events-auto' 
-            : 'opacity-0 -translate-y-4 filter blur-sm pointer-events-none'
-        }`}
-      >
-        {slide.text}
-      </p>
-    );
-  })}
-</div>
-      {/* 4. FLOATING BOTTOM NAVIGATION BAR */}
+          return (
+            <p
+              key={index}
+              className={`absolute z-30 font-[family-name:var(--font-cc-oldpress)] text-2xl md:text-4xl max-w-xl leading-relaxed drop-shadow-[0_4px_12px_rgba(240,239,224,1)] transition-all duration-700 ease-in-out select-none ${cornerClasses} ${
+                isTextVisible 
+                  ? 'opacity-100 translate-y-0 filter blur-0 pointer-events-auto' 
+                  : 'opacity-0 -translate-y-4 filter blur-sm pointer-events-none'
+              }`}
+            >
+              {slide.text}
+            </p>
+          );
+        })}
+      </div>
+
+      {/* 5. FLOATING BOTTOM NAVIGATION BAR */}
       <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#7A6229] text-[#F0EFE0] px-8 py-3 rounded-full shadow-lg flex items-center gap-8 backdrop-blur-sm bg-opacity-95">
         <button onClick={() => setCurrentStep(0)} className="hover:scale-110 transition-transform duration-200" aria-label="Home">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 1-1.06 1.061l-.75-.751V19.25a.75.75 0 0 1-.75.75h-3.5a.75.75 0 0 1-.75-.75V14.25H11v5a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V12.84l-.75.75a.75.75 0 1 1-1.06-1.06l8.69-8.69Z" /></svg>

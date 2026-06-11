@@ -208,7 +208,6 @@ const handleStepAdvance = (direction: 'next' | 'prev') => {
           );
         })}
       </div>
-
 {/* 4. TEXT CORNER OVERLAYS */}
 <div className="absolute inset-0 pointer-events-none w-full h-full z-30">
   {slidesData.map((slide, index) => {
@@ -223,10 +222,11 @@ const handleStepAdvance = (direction: 'next' | 'prev') => {
     const isTextVisible = currentStep === targetTextStep; 
     const isCenteredSlide = index === 4 || index === 5;
 
+    // We add 'group' to Slide 5 so everything inside reacts to one hover
     const alignmentClasses = index === 5
       ? 'top-[14%] left-1/2 -translate-x-1/2 text-center max-w-4xl w-full px-6 text-xl md:text-2xl'
       : index === 4
-        ? 'top-[20%] left-1/2 -translate-x-1/2 text-center max-w-4xl w-full px-6 text-xl md:text-2xl'
+        ? 'top-[12%] left-1/2 -translate-x-1/2 text-center max-w-4xl w-full px-6 text-xl md:text-2xl flex flex-col items-center gap-6 group pointer-events-auto' 
         : slide.position === 'right'
           ? 'bottom-24 right-6 md:right-16 text-right max-w-xl'
           : 'bottom-24 left-6 md:left-16 text-left max-w-xl';
@@ -242,12 +242,11 @@ const handleStepAdvance = (direction: 'next' | 'prev') => {
             : 'opacity-0 filter blur-sm pointer-events-none -translate-y-4'
         } whitespace-pre-line`}
       >
-        {/* 🌟 NEW RENDER CHECK: Handles both array lists and standard line strings seamlessly */}
+        {/* Render standard text structures */}
         {Array.isArray(slide.text) ? (
           slide.text.map((line, lineIndex) => (
             <span 
               key={lineIndex} 
-              // If it's the 3rd line (index 2), make it bold! Otherwise keep it normal weight.
               className={`block ${lineIndex === 2 ? 'font-bold tracking-wide mt-2' : 'font-normal opacity-90'}`}
             >
               {line}
@@ -256,10 +255,37 @@ const handleStepAdvance = (direction: 'next' | 'prev') => {
         ) : (
           <span>{slide.text}</span>
         )}
+
+        {/* 🗺️ GOOGLE MAPS BUTTON FOR SLIDE 5 (Reacts to container hover) */}
+        {index === 4 && (
+          <Link
+            href="https://share.google/dNHtOxiEZRKsADbOp" // 👈 Change this to your exact venue link
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-sans mt-2 px-8 py-3 bg-[#7A6229] text-[#F0EFE0] rounded-full text-sm font-semibold tracking-wider shadow-md transition-all duration-300 flex items-center gap-2 cursor-pointer group-hover:bg-[#634f20] group-hover:scale-105 active:scale-98"
+          >
+            {/* Location Pin Icon */}
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              strokeWidth={2.5} 
+              stroke="currentColor" 
+              className="w-4 h-4"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+            </svg>
+            <span className="flex items-center gap-1">
+    <span > එක බලන්න</span>
+  </span>
+          </Link>
+        )}
       </div>
     );
   })}
 </div>
+
 
       {/* 5. INDEPENDENT FINALE CTA SCREEN (Step 15: No background image, perfectly centered layout) */}
       <div className={`absolute inset-0 z-40 w-full h-full flex flex-col items-center justify-center text-center px-6 pointer-events-none transition-all duration-1000 ease-in-out ${
